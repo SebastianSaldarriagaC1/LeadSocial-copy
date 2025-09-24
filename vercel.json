@@ -1,9 +1,5 @@
 {
-  "redirects": [
-    {
-      "source": "/api/login/callback",
-      "destination": "/first-time",
-      "permanent": false
-    }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
