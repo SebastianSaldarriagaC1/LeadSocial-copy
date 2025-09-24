@@ -1,3 +1,9 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "redirects": [
+    {
+      "source": "/api/login/callback",
+      "destination": "/first-time",
+      "permanent": false
+    }
+  ]
 }
