@@ -112,6 +112,7 @@ export default function ResultPage() {
   const initialImage = state?.image || null
   const payload = state?.payload || null
 
+  console.log("ImageGenerated: ", payload.imageGenerated)
   // caption editable + imagen (y carga si falta)
   const [caption, setCaption] = useState(initialText)
   const [image, setImage] = useState(initialImage)
@@ -123,6 +124,14 @@ export default function ResultPage() {
   const [pubError, setPubError] = useState('')
   const [pubOk, setPubOk] = useState(false)
 
+  const requestId = payload?._requestId ?? null
+  const didRunRef = useRef(false)
+
+  useEffect(() => {
+    // resetear la guard cuando cambia el requestId (nuevo payload)
+    didRunRef.current = false
+  }, [requestId])
+
   // si se entra sin state, volver al instruct
   useEffect(() => {
     if (!state) navigate('/instruct', { replace: true })
@@ -130,14 +139,25 @@ export default function ResultPage() {
 
   // Si no llegó imagen pero sí payload, genera la imagen aquí y habilita "Publicar" al finalizar
   useEffect(() => {
+    // si ya corrimos para este payload / request, no volvemos a correr
+    if (didRunRef.current) return
+
     const run = async () => {
-      if (image || !payload || payload.imageGenerated) return
-      const token = localStorage.getItem("token")
+      // marca inmediatamente para evitar reentradas
+      didRunRef.current = true
+
+      // Si ya tenemos imagen o no hay payload o si la imagen ya fue pedida/Generada desde la página previa => no hacemos nada
+      if (image || !payload || payload.imageRequested || payload.imageGenerated) {
+        return
+      }
+
+      const token = localStorage.getItem('token')
       if (!token) {
         setImgLoading(false)
         setImgError('No hay token de Instagram. Conéctalo nuevamente.')
         return
       }
+
       try {
         setImgLoading(true)
         setImgError('')
@@ -168,8 +188,10 @@ export default function ResultPage() {
         setImgLoading(false)
       }
     }
+
     run()
-  }, [image, payload])
+    // solo dependemos del requestId y de image (si image cambia ya no necesitamos generar)
+  }, [requestId, image, payload])
 
   const canPublish = useMemo(
     () => Boolean(caption?.trim()) && Boolean(image) && !imgLoading && !isPublishing,

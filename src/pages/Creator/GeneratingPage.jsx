@@ -60,11 +60,19 @@ export default function GeneratingPage() {
         const textJson = await textRes.json()
         const generatedText =
           textJson?.['post-text'] ?? textJson?.postText ?? textJson?.text ?? textJson?.content ?? textJson?.result ?? ''
+        
+        const requestId = crypto?.randomUUID?.() ?? String(Date.now())
 
-        // Navegamos ya con el texto (sin imagen aún)
+        const payloadWithFlags = {
+          ...payload,
+          _requestId: requestId,
+          imageRequested: true, // indica que la imagen ya está en progreso
+        }
+
+        // 1) Navegamos rápido con texto + payload que ya marca que la imagen fue pedida
         navigate('/instruct/result', {
           replace: true,
-          state: { text: generatedText, image: null, payload },
+          state: { text: generatedText, image: null, payload: payloadWithFlags },
         })
 
         // 2) Cuando la imagen esté lista, actualizamos la misma ruta con replace
@@ -72,17 +80,21 @@ export default function GeneratingPage() {
           .then(async (imgRes) => {
             if (!imgRes.ok) throw new Error((await imgRes.text()) || `HTTP ${imgRes.status}`)
             const imgJson = await imgRes.json()
-            const imageUrl =
-              imgJson?.['image-url'] ?? imgJson?.imageUrl ?? imgJson?.image ?? null
+            const imageUrl = imgJson?.['image-url'] ?? imgJson?.imageUrl ?? imgJson?.image ?? null
+
+            // 3) Cuando la imagen está lista, reemplazamos el state con image + marca imageGenerated
             if (imageUrl) {
               navigate('/instruct/result', {
                 replace: true,
-                state: { text: generatedText, image: imageUrl ?? null, payload: { ...payload, imageGenerated: true } },
-              });
+                state: {
+                  text: generatedText,
+                  image: imageUrl,
+                  payload: { ...payloadWithFlags, imageGenerated: true },
+                },
+              })
             }
           })
           .catch((e) => {
-            // No rompemos el flujo si falla la imagen; solo lo registramos
             console.warn('Error generando imagen:', e)
           })
       } catch (err) {
