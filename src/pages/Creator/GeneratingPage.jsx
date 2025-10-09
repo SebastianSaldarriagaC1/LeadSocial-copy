@@ -77,8 +77,8 @@ export default function GeneratingPage() {
             if (imageUrl) {
               navigate('/instruct/result', {
                 replace: true,
-                state: { text: generatedText, image: imageUrl, payload },
-              })
+                state: { text: generatedText, image: imageUrl ?? null, payload: { ...payload, imageGenerated: true } },
+              });
             }
           })
           .catch((e) => {

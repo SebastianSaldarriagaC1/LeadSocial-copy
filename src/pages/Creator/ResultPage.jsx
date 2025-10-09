@@ -131,7 +131,7 @@ export default function ResultPage() {
   // Si no llegó imagen pero sí payload, genera la imagen aquí y habilita "Publicar" al finalizar
   useEffect(() => {
     const run = async () => {
-      if (image || !payload) return
+      if (image || !payload || payload.imageGenerated) return
       const token = localStorage.getItem("token")
       if (!token) {
         setImgLoading(false)
