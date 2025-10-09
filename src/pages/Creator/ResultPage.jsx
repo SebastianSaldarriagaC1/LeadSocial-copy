@@ -1,6 +1,6 @@
 // src/pages/Creator/ResultPage.jsx
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import { instagramApi } from '../../lib/api'
 import { getInstagramAccessToken } from '../../lib/ig'
 
@@ -125,6 +125,7 @@ export default function ResultPage() {
   const [pubOk, setPubOk] = useState(false)
 
   const requestId = payload?._requestId ?? null
+  const didRunRef = useRef(false)
 
   useEffect(() => {
     // resetear la guard cuando cambia el requestId (nuevo payload)
