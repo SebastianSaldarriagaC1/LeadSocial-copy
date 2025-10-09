@@ -182,7 +182,7 @@ export default function ResultPage() {
       setPubOk(false)
       setIsPublishing(true)
 
-      const igToken = getInstagramAccessToken()
+      const igToken = localStorage.getItem("token")
       if (!igToken) throw new Error('No hay token de Instagram. Conéctalo nuevamente.')
 
       const body = {

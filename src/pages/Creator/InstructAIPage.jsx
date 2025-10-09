@@ -133,7 +133,7 @@ export default function InstructAIPage() {
   }, [])
 
   const sendStepTime = async (stepIndex, millis) => {
-    const token = getInstagramAccessToken()
+    const token = localStorage.getItem("token")
     if (!token) return
     const screenName = `instruct:${STEPS[stepIndex]}`
     try {
