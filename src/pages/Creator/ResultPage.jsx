@@ -132,7 +132,7 @@ export default function ResultPage() {
   useEffect(() => {
     const run = async () => {
       if (image || !payload) return
-      const token = getInstagramAccessToken()
+      const token = localStorage.getItem("token")
       if (!token) {
         setImgLoading(false)
         setImgError('No hay token de Instagram. Conéctalo nuevamente.')
@@ -141,7 +141,7 @@ export default function ResultPage() {
       try {
         setImgLoading(true)
         setImgError('')
-        const res = await fetch('https://adf309aa3294.ngrok-free.app/api/ai/generate/image', {
+        const res = await fetch('https://utilizable-peridermal-candace.ngrok-free.app/api/ai/generate/image', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

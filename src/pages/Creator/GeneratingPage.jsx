@@ -21,16 +21,11 @@ export default function GeneratingPage() {
         const textURL  = `${BASE}/api/ai/generate/text`
         const imageURL = `${BASE}/api/ai/generate/image`
 
-        const igAccess = getInstagramAccessToken()
-        if (!igAccess) {
-          console.warn('IG access token no encontrado')
-          navigate('/first-time', { replace: true })
-          return
-        }
+        const token = localStorage.getItem("token")
 
         const headers = {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${igAccess}`,
+          Authorization: `Bearer ${token}`,
         }
         const body = JSON.stringify(payload)
 
