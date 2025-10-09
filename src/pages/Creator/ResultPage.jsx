@@ -106,6 +106,7 @@ function InstagramCard({ image, text, loading }) {
 export default function ResultPage() {
   const navigate = useNavigate()
   const { state } = useLocation()
+  const location = useLocation()
 
   // datos de navegación
   const initialText = state?.text || ''
@@ -136,6 +137,12 @@ export default function ResultPage() {
   useEffect(() => {
     if (!state) navigate('/instruct', { replace: true })
   }, [state, navigate])
+
+  useEffect(() => {
+    if (location.state?.image) {
+      setImage(location.state.image)
+    }
+  }, [location.state?.image])
 
   // Si no llegó imagen pero sí payload, genera la imagen aquí y habilita "Publicar" al finalizar
   useEffect(() => {
