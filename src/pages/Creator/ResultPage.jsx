@@ -1,6 +1,6 @@
 // src/pages/Creator/ResultPage.jsx
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import { instagramApi } from '../../lib/api'
 import { getInstagramAccessToken } from '../../lib/ig'
 
