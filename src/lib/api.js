@@ -11,18 +11,32 @@ async function request(path, { method = 'GET', body, token, headers = {} } = {})
       ...headers,
     },
     body: body ? JSON.stringify(body) : undefined,
+    credentials: 'include', // por si usas cookies httpOnly
   });
 
   // Devuelve texto si no es JSON válido
   const text = await res.text();
   let data;
-  try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text }; }
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    data = { raw: text };
+  }
 
   if (!res.ok) {
+    if (res.status === 401) {
+      localStorage.removeItem('token');
+      alert('Tu sesión expiró. Por favor, inicia sesión nuevamente.');
+      navigate('/');
+
+      return; 
+    }
+
     const msg =
       data?.message || data?.error || data?.detail || text || `HTTP ${res.status}`;
     throw new Error(msg);
   }
+
   return data;
 }
 
