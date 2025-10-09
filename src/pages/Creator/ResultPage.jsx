@@ -140,6 +140,7 @@ export default function ResultPage() {
 
   useEffect(() => {
     if (location.state?.image) {
+      setImgLoading(false)
       setImage(location.state.image)
     }
   }, [location.state?.image])
