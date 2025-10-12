@@ -1,12 +1,15 @@
 // src/lib/api.js
-const BASE = 'https://utilizable-peridermal-candace.ngrok-free.app';
+const BASE = import.meta.env.VITE_API_URL || "";
 
 /** Wrapper genérico */
-async function request(path, { method = 'GET', body, token, headers = {} } = {}) {
+async function request(
+  path,
+  { method = "GET", body, token, headers = {} } = {}
+) {
   const res = await fetch(`${BASE}${path}`, {
     method,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
@@ -16,19 +19,27 @@ async function request(path, { method = 'GET', body, token, headers = {} } = {})
   // Devuelve texto si no es JSON válido
   const text = await res.text();
   let data;
-  try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text }; }
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    data = { raw: text };
+  }
 
   if (!res.ok) {
     if (res.status === 401) {
-      localStorage.removeItem('token');
-      alert('Tu sesión expiró. Por favor, inicia sesión nuevamente.');
-      navigate('/');
+      localStorage.removeItem("token");
+      alert("Tu sesión expiró. Por favor, inicia sesión nuevamente.");
+      navigate("/");
 
-      return; 
+      return;
     }
 
     const msg =
-      data?.message || data?.error || data?.detail || text || `HTTP ${res.status}`;
+      data?.message ||
+      data?.error ||
+      data?.detail ||
+      text ||
+      `HTTP ${res.status}`;
     throw new Error(msg);
   }
 
@@ -38,22 +49,23 @@ async function request(path, { method = 'GET', body, token, headers = {} } = {})
 /** === APIs específicas === */
 export const authApi = {
   register: (payload) =>
-    request('/api/auth/register', { method: 'POST', body: payload }),
+    request("/api/auth/register", { method: "POST", body: payload }),
   login: (payload) =>
-    request('/api/auth/login', { method: 'POST', body: payload }),
-  me: (token) => request('/api/auth/me', { token }),
+    console.log("payload", payload) ||
+    request("/api/auth/login", { method: "POST", body: payload }),
+  me: (token) => request("/api/auth/me", { token }),
 };
 
 export const instagramApi = {
   // Publicar post en Instagram
   post: (payload, token) =>
-    request('/api/instagram/post', { method: 'POST', body: payload, token }),
+    request("/api/instagram/post", { method: "POST", body: payload, token }),
 };
 
 export const analyticsApi = {
   screenTime: (screenName, timeSpent, token) =>
-    request('/api/analytics/screen-time', {
-      method: 'POST',
+    request("/api/analytics/screen-time", {
+      method: "POST",
       body: { screenName, timeSpent },
       token,
     }),

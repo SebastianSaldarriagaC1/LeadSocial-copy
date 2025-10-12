@@ -2,9 +2,8 @@
 import React from "react";
 
 // usa .env si quieres cambiarlo sin tocar código
-const CONNECT_URL =
-  import.meta.env.VITE_IG_CONNECT_URL ||
-  "https://utilizable-peridermal-candace.ngrok-free.app/api/social/instagram/connect";
+const BASE = import.meta.env.VITE_API_URL || "";
+const CONNECT_URL = `${BASE}/api/social/instagram/connect`;
 
 export default function InstagramBusinessButton({ className = "" }) {
   const goToInstagramConnect = () => {
@@ -26,9 +25,23 @@ export default function InstagramBusinessButton({ className = "" }) {
       {/* ícono IG inline */}
       <span className="inline-flex w-5 h-5 items-center justify-center">
         <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
-          <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.8"/>
-          <circle cx="12" cy="12" r="3.5" stroke="currentColor" strokeWidth="1.8"/>
-          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
+          <rect
+            x="3"
+            y="3"
+            width="18"
+            height="18"
+            rx="5"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="3.5"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          />
+          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
         </svg>
       </span>
       <span>Continuar con Instagram</span>

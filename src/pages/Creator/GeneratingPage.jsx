@@ -1,118 +1,143 @@
-import { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { getInstagramAccessToken } from '../../lib/ig'
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getInstagramAccessToken } from "../../lib/ig";
 
 export default function GeneratingPage() {
-  const navigate = useNavigate()
-  const { state } = useLocation()
-  const payload = state?.payload
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const payload = state?.payload;
   // Soporta modos anteriores; por defecto hacemos ambos
-  const mode = state?.mode ?? 'both' // 'both' | 'text'
+  const mode = state?.mode ?? "both"; // 'both' | 'text'
 
   useEffect(() => {
     if (!payload) {
-      navigate('/instruct', { replace: true })
-      return
+      navigate("/instruct", { replace: true });
+      return;
     }
 
     const run = async () => {
       try {
-        const BASE = 'https://utilizable-peridermal-candace.ngrok-free.app'
-        const textURL  = `${BASE}/api/ai/generate/text`
-        const imageURL = `${BASE}/api/ai/generate/image`
+        const BASE = import.meta.env.VITE_API_URL || "";
+        const textURL = `${BASE}/api/ai/generate/text`;
+        const imageURL = `${BASE}/api/ai/generate/image`;
 
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
 
         const headers = {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-        }
-        const body = JSON.stringify(payload)
+        };
+        const body = JSON.stringify(payload);
 
         // --- MODO SOLO TEXTO (compatibilidad) ---
-        if (mode === 'text') {
-          const res = await fetch(textURL, { method: 'POST', headers, body })
+        if (mode === "text") {
+          const res = await fetch(textURL, { method: "POST", headers, body });
           if (res.status === 401) {
-            navigate('/first-time', { replace: true }); return
+            navigate("/first-time", { replace: true });
+            return;
           }
-          if (!res.ok) throw new Error((await res.text()) || `HTTP ${res.status}`)
+          if (!res.ok)
+            throw new Error((await res.text()) || `HTTP ${res.status}`);
 
-          const data = await res.json()
+          const data = await res.json();
           const generatedText =
-            data?.['post-text'] ?? data?.postText ?? data?.text ?? data?.content ?? data?.result ?? ''
+            data?.["post-text"] ??
+            data?.postText ??
+            data?.text ??
+            data?.content ??
+            data?.result ??
+            "";
 
-          navigate('/instruct/result', {
+          navigate("/instruct/result", {
             replace: true,
             state: { text: generatedText, image: null, payload },
-          })
-          return
+          });
+          return;
         }
 
         // --- MODO AMBOS: disparamos en paralelo ---
-        const textReq  = fetch(textURL,  { method: 'POST', headers, body })
-        const imageReq = fetch(imageURL, { method: 'POST', headers, body })
+        const textReq = fetch(textURL, { method: "POST", headers, body });
+        const imageReq = fetch(imageURL, { method: "POST", headers, body });
 
         // 1) Esperamos SOLO el texto para navegar rápido
-        const textRes = await textReq
-        if (textRes.status === 401) { navigate('/first-time', { replace: true }); return }
-        if (!textRes.ok) throw new Error((await textRes.text()) || `HTTP ${textRes.status}`)
+        const textRes = await textReq;
+        if (textRes.status === 401) {
+          navigate("/first-time", { replace: true });
+          return;
+        }
+        if (!textRes.ok)
+          throw new Error((await textRes.text()) || `HTTP ${textRes.status}`);
 
-        const textJson = await textRes.json()
+        const textJson = await textRes.json();
         const generatedText =
-          textJson?.['post-text'] ?? textJson?.postText ?? textJson?.text ?? textJson?.content ?? textJson?.result ?? ''
-        
-        const requestId = crypto?.randomUUID?.() ?? String(Date.now())
+          textJson?.["post-text"] ??
+          textJson?.postText ??
+          textJson?.text ??
+          textJson?.content ??
+          textJson?.result ??
+          "";
+
+        const requestId = crypto?.randomUUID?.() ?? String(Date.now());
 
         const payloadWithFlags = {
           ...payload,
           _requestId: requestId,
           imageRequested: true, // indica que la imagen ya está en progreso
-        }
+        };
 
         // 1) Navegamos rápido con texto + payload que ya marca que la imagen fue pedida
-        navigate('/instruct/result', {
+        navigate("/instruct/result", {
           replace: true,
-          state: { text: generatedText, image: null, payload: payloadWithFlags },
-        })
+          state: {
+            text: generatedText,
+            image: null,
+            payload: payloadWithFlags,
+          },
+        });
 
         // 2) Cuando la imagen esté lista, actualizamos la misma ruta con replace
         imageReq
           .then(async (imgRes) => {
-            if (!imgRes.ok) throw new Error((await imgRes.text()) || `HTTP ${imgRes.status}`)
-            const imgJson = await imgRes.json()
-            const imageUrl = imgJson?.['image-url'] ?? imgJson?.imageUrl ?? imgJson?.image ?? null
+            if (!imgRes.ok)
+              throw new Error((await imgRes.text()) || `HTTP ${imgRes.status}`);
+            const imgJson = await imgRes.json();
+            const imageUrl =
+              imgJson?.["image-url"] ??
+              imgJson?.imageUrl ??
+              imgJson?.image ??
+              null;
 
             // 3) Cuando la imagen está lista, reemplazamos el state con image + marca imageGenerated
             if (imageUrl) {
-              navigate('/instruct/result', {
+              navigate("/instruct/result", {
                 replace: true,
                 state: {
                   text: generatedText,
                   image: imageUrl,
                   payload: { ...payloadWithFlags, imageGenerated: true },
                 },
-              })
+              });
             }
           })
           .catch((e) => {
-            console.warn('Error generando imagen:', e)
-          })
+            console.warn("Error generando imagen:", e);
+          });
       } catch (err) {
-        navigate('/instruct/result', {
+        navigate("/instruct/result", {
           replace: true,
           state: {
             text:
-              'Hubo un problema generando el contenido. Intenta nuevamente.\n\n' +
+              "Hubo un problema generando el contenido. Intenta nuevamente.\n\n" +
               String(err),
             payload,
             error: true,
           },
-        })
+        });
       }
-    }
+    };
 
-    run()
-  }, [navigate, payload, mode])
+    run();
+  }, [navigate, payload, mode]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1E64FA] relative overflow-hidden">
@@ -126,5 +151,5 @@ export default function GeneratingPage() {
         <p className="text-white text-lg font-semibold">Creando publicación…</p>
       </div>
     </div>
-  )
+  );
 }

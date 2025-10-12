@@ -1,60 +1,111 @@
 // src/pages/Creator/ResultPage.jsx
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useRef, useState, useMemo } from 'react'
-import { instagramApi } from '../../lib/api'
-import { getInstagramAccessToken } from '../../lib/ig'
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { instagramApi } from "../../lib/api";
+import { getInstagramAccessToken } from "../../lib/ig";
 
 /* ---------- ICONOS ---------- */
 const PlusIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg
+    viewBox="0 0 24 24"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
     <path d="M12 5v14M5 12h14" strokeLinecap="round" />
   </svg>
-)
+);
 const RestartIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+  <svg
+    viewBox="0 0 24 24"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+  >
     <path d="M3 12a9 9 0 109-9" />
     <path d="M3 4v8h8" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
-)
+);
 const CancelIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg
+    viewBox="0 0 24 24"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
     <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
   </svg>
-)
+);
 const CalendarIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+  <svg
+    viewBox="0 0 24 24"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+  >
     <rect x="3" y="5" width="18" height="16" rx="2" />
     <path d="M8 3v4M16 3v4M3 11h18" />
   </svg>
-)
+);
 const DotsIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
     <circle cx="5" cy="12" r="1.8" />
     <circle cx="12" cy="12" r="1.8" />
     <circle cx="19" cy="12" r="1.8" />
   </svg>
-)
+);
 const HeartIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+  <svg
+    viewBox="0 0 24 24"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+  >
     <path d="M20.8 5.6a5 5 0 00-7.1 0L12 7.3l-1.7-1.7a5 5 0 00-7.1 7.1l1.7 1.7L12 21l7.1-6.6 1.7-1.7a5 5 0 000-7.1z" />
   </svg>
-)
+);
 const CommentIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8">
-    <path d="M21 12a8 8 0 01-8 8H7l-4 3 1.5-5.5A8 8 0 113 12" strokeLinejoin="round" />
+  <svg
+    viewBox="0 0 24 24"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+  >
+    <path
+      d="M21 12a8 8 0 01-8 8H7l-4 3 1.5-5.5A8 8 0 113 12"
+      strokeLinejoin="round"
+    />
   </svg>
-)
+);
 const SendIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+  <svg
+    viewBox="0 0 24 24"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+  >
     <path d="M22 2L11 13" />
     <path d="M22 2l-7 20-4-9-9-4 20-7z" strokeLinejoin="round" />
   </svg>
-)
+);
 const BookmarkIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+  <svg
+    viewBox="0 0 24 24"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+  >
     <path d="M6 3h12a2 2 0 012 2v16l-8-4-8 4V5a2 2 0 012-2z" />
   </svg>
-)
+);
 
 /* ---------- CARD IG ---------- */
 function InstagramCard({ image, text, loading }) {
@@ -71,7 +122,11 @@ function InstagramCard({ image, text, loading }) {
 
         <div className="relative bg-black">
           {image ? (
-            <img src={image} alt="post" className="w-full aspect-square object-cover" />
+            <img
+              src={image}
+              alt="post"
+              className="w-full aspect-square object-cover"
+            />
           ) : (
             <div className="w-full aspect-square bg-gradient-to-br from-slate-700 to-slate-900" />
           )}
@@ -94,150 +149,163 @@ function InstagramCard({ image, text, loading }) {
         <div className="px-3 pb-3">
           <p className="text-sm leading-relaxed">
             <span className="font-semibold">Leadestate </span>
-            <span className="text-white/90 whitespace-pre-wrap">{text || '—'}</span>
+            <span className="text-white/90 whitespace-pre-wrap">
+              {text || "—"}
+            </span>
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 /* ---------- PÁGINA ---------- */
 export default function ResultPage() {
-  const navigate = useNavigate()
-  const { state } = useLocation()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const location = useLocation();
 
   // datos de navegación
-  const initialText = state?.text || ''
-  const initialImage = state?.image || null
-  const payload = state?.payload || null
+  const initialText = state?.text || "";
+  const initialImage = state?.image || null;
+  const payload = state?.payload || null;
 
-  console.log("ImageGenerated: ", payload.imageGenerated)
+  console.log("ImageGenerated: ", payload.imageGenerated);
   // caption editable + imagen (y carga si falta)
-  const [caption, setCaption] = useState(initialText)
-  const [image, setImage] = useState(initialImage)
-  const [imgLoading, setImgLoading] = useState(!initialImage)
-  const [imgError, setImgError] = useState('')
+  const [caption, setCaption] = useState(initialText);
+  const [image, setImage] = useState(initialImage);
+  const [imgLoading, setImgLoading] = useState(!initialImage);
+  const [imgError, setImgError] = useState("");
 
   // publicación
-  const [isPublishing, setIsPublishing] = useState(false)
-  const [pubError, setPubError] = useState('')
-  const [pubOk, setPubOk] = useState(false)
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [pubError, setPubError] = useState("");
+  const [pubOk, setPubOk] = useState(false);
 
-  const requestId = payload?._requestId ?? null
-  const didRunRef = useRef(false)
+  const requestId = payload?._requestId ?? null;
+  const didRunRef = useRef(false);
 
   useEffect(() => {
     // resetear la guard cuando cambia el requestId (nuevo payload)
-    didRunRef.current = false
-  }, [requestId])
+    didRunRef.current = false;
+  }, [requestId]);
 
   // si se entra sin state, volver al instruct
   useEffect(() => {
-    if (!state) navigate('/instruct', { replace: true })
-  }, [state, navigate])
+    if (!state) navigate("/instruct", { replace: true });
+  }, [state, navigate]);
 
   useEffect(() => {
     if (location.state?.image) {
-      setImgLoading(false)
-      setImage(location.state.image)
+      setImgLoading(false);
+      setImage(location.state.image);
     }
-  }, [location.state?.image])
+  }, [location.state?.image]);
 
   // Si no llegó imagen pero sí payload, genera la imagen aquí y habilita "Publicar" al finalizar
   useEffect(() => {
     // si ya corrimos para este payload / request, no volvemos a correr
-    if (didRunRef.current) return
+    if (didRunRef.current) return;
 
     const run = async () => {
       // marca inmediatamente para evitar reentradas
-      didRunRef.current = true
+      didRunRef.current = true;
 
       // Si ya tenemos imagen o no hay payload o si la imagen ya fue pedida/Generada desde la página previa => no hacemos nada
-      if (image || !payload || payload.imageRequested || payload.imageGenerated) {
-        return
+      if (
+        image ||
+        !payload ||
+        payload.imageRequested ||
+        payload.imageGenerated
+      ) {
+        return;
       }
 
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem("token");
       if (!token) {
-        setImgLoading(false)
-        setImgError('No hay token de Instagram. Conéctalo nuevamente.')
-        return
+        setImgLoading(false);
+        setImgError("No hay token de Instagram. Conéctalo nuevamente.");
+        return;
       }
 
       try {
-        setImgLoading(true)
-        setImgError('')
-        const res = await fetch('https://utilizable-peridermal-candace.ngrok-free.app/api/ai/generate/image', {
-          method: 'POST',
+        setImgLoading(true);
+        setImgError("");
+        const base = import.meta.env.VITE_API_URL || "";
+        const res = await fetch(`${base}/api/ai/generate/image`, {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
-        })
+        });
         if (!res.ok) {
-          const t = await res.text()
-          throw new Error(t || `HTTP ${res.status}`)
+          const t = await res.text();
+          throw new Error(t || `HTTP ${res.status}`);
         }
-        const data = await res.json()
+        const data = await res.json();
         const url =
           data?.data?.imageUrl ??
           data?.imageUrl ??
           data?.image ??
-          data?.['image-url'] ??
-          null
-        if (!url) throw new Error('No se recibió imageUrl')
-        setImage(url)
+          data?.["image-url"] ??
+          null;
+        if (!url) throw new Error("No se recibió imageUrl");
+        setImage(url);
       } catch (e) {
-        setImgError(e?.message || String(e))
+        setImgError(e?.message || String(e));
       } finally {
-        setImgLoading(false)
+        setImgLoading(false);
       }
-    }
+    };
 
-    run()
+    run();
     // solo dependemos del requestId y de image (si image cambia ya no necesitamos generar)
-  }, [requestId, image, payload])
+  }, [requestId, image, payload]);
 
   const canPublish = useMemo(
-    () => Boolean(caption?.trim()) && Boolean(image) && !imgLoading && !isPublishing,
+    () =>
+      Boolean(caption?.trim()) &&
+      Boolean(image) &&
+      !imgLoading &&
+      !isPublishing,
     [caption, image, imgLoading, isPublishing]
-  )
+  );
 
   const publish = async () => {
     try {
-      setPubError('')
-      setPubOk(false)
-      setIsPublishing(true)
+      setPubError("");
+      setPubOk(false);
+      setIsPublishing(true);
 
-      const igToken = localStorage.getItem("token")
-      if (!igToken) throw new Error('No hay token de Instagram. Conéctalo nuevamente.')
+      const igToken = localStorage.getItem("token");
+      if (!igToken)
+        throw new Error("No hay token de Instagram. Conéctalo nuevamente.");
 
       const body = {
-        provider: 'instagram',
+        provider: "instagram",
         content: {
-          caption: caption || '',
+          caption: caption || "",
           ...(image ? { imageUrl: image } : {}),
         },
-      }
+      };
 
-      await instagramApi.post(body, igToken)
-      setPubOk(true)
+      await instagramApi.post(body, igToken);
+      setPubOk(true);
     } catch (e) {
-      setPubError(e?.message || String(e))
+      setPubError(e?.message || String(e));
     } finally {
-      setIsPublishing(false)
+      setIsPublishing(false);
     }
-  }
+  };
 
-  const restart = () => navigate('/instruct') // reiniciar publicación
-  const cancel = () => navigate('/onboarding/returning-user') // cancelar y volver
+  const restart = () => navigate("/instruct"); // reiniciar publicación
+  const cancel = () => navigate("/onboarding/returning-user"); // cancelar y volver
   const goSchedule = () =>
-    navigate('/instruct/schedule', {
+    navigate("/instruct/schedule", {
       state: { caption, image }, // para mostrar preview arriba
-    })
+    });
 
   return (
     <div className="min-h-screen bg-[#0B1220] text-white px-4 py-6">
@@ -245,7 +313,7 @@ export default function ResultPage() {
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <button
-            onClick={() => navigate('/instruct')}
+            onClick={() => navigate("/instruct")}
             className="w-9 h-9 rounded-lg bg-white/10 ring-1 ring-white/15 flex items-center justify-center"
             aria-label="Volver"
           >
@@ -262,7 +330,9 @@ export default function ResultPage() {
           <div className="w-full max-w-sm md:ml-2 space-y-4">
             {/* Editor de caption */}
             <div className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-3">
-              <label className="text-sm font-semibold mb-2 block">Editar texto</label>
+              <label className="text-sm font-semibold mb-2 block">
+                Editar texto
+              </label>
               <textarea
                 rows={6}
                 value={caption}
@@ -281,16 +351,24 @@ export default function ResultPage() {
             {/* Publicar */}
             <button
               className={[
-                'w-full h-14 rounded-2xl font-semibold flex items-center justify-between px-5',
-                'shadow-[0_10px_30px_rgba(30,100,250,0.35)]',
-                'text-white',
-                canPublish ? 'bg-brand-primary hover:opacity-95' : 'bg-brand-primary/60 cursor-not-allowed',
-              ].join(' ')}
+                "w-full h-14 rounded-2xl font-semibold flex items-center justify-between px-5",
+                "shadow-[0_10px_30px_rgba(30,100,250,0.35)]",
+                "text-white",
+                canPublish
+                  ? "bg-brand-primary hover:opacity-95"
+                  : "bg-brand-primary/60 cursor-not-allowed",
+              ].join(" ")}
               onClick={publish}
               disabled={!canPublish}
-              title={!canPublish ? 'Esperando imagen o texto' : undefined}
+              title={!canPublish ? "Esperando imagen o texto" : undefined}
             >
-              <span>{isPublishing ? 'Publicando…' : pubOk ? '¡Publicado!' : 'Publicar'}</span>
+              <span>
+                {isPublishing
+                  ? "Publicando…"
+                  : pubOk
+                  ? "¡Publicado!"
+                  : "Publicar"}
+              </span>
               <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white/15">
                 <PlusIcon />
               </span>
@@ -346,5 +424,5 @@ export default function ResultPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
