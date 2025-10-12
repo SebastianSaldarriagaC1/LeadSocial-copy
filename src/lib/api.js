@@ -6,9 +6,6 @@ async function request(
   path,
   { method = "GET", body, token, headers = {} } = {}
 ) {
-  console.log('[API] Llamando a:', `${BASE}${path}`);
-  console.log('[API] Método:', method);
-  if (body) console.log('[API] Cuerpo:', body);
   const res = await fetch(`${BASE}${path}`, {
     method,
     headers: {
