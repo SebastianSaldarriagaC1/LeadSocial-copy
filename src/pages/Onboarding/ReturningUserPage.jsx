@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 
+const BASE = import.meta.env.VITE_API_URL || "";
+const CONNECT_URL = `${BASE}/api/social/instagram/connect`;
+
 // ---------- Marca ----------
 function BrandLS360() {
   return (
@@ -177,7 +180,7 @@ export default function ReturningUserPage() {
                   No tienes ninguna cuenta de Instagram conectada.
                 </p>
                 <button
-                  onClick={() => navigate("/settings")}
+                  onClick={() => window.location.assign(CONNECT_URL)}
                   className="mt-1 text-sm text-rose-300 underline hover:text-rose-200"
                 >
                   Conectar cuenta ahora
