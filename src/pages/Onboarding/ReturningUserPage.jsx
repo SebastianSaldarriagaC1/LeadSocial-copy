@@ -1,14 +1,20 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../auth/AuthContext';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
 
 // ---------- Marca ----------
 function BrandLS360() {
   return (
     <h1 className="flex items-baseline gap-1">
-      <span className="text-2xl md:text-3xl font-semibold tracking-tight">Lead</span>
-      <span className="text-2xl md:text-3xl italic font-brandSerif font-medium text-white/90">Social</span>
-      <span className="text-2xl md:text-3xl italic font-brandSerif font-medium text-white/90">360</span>
+      <span className="text-2xl md:text-3xl font-semibold tracking-tight">
+        Lead
+      </span>
+      <span className="text-2xl md:text-3xl italic font-brandSerif font-medium text-white/90">
+        Social
+      </span>
+      <span className="text-2xl md:text-3xl italic font-brandSerif font-medium text-white/90">
+        360
+      </span>
     </h1>
   );
 }
@@ -19,7 +25,11 @@ function MiniBars() {
   return (
     <div className="flex items-end gap-2 h-16">
       {bars.map((h, i) => (
-        <div key={i} className="w-3 rounded-md bg-blue-400/70" style={{ height: `${h}px` }} />
+        <div
+          key={i}
+          className="w-3 rounded-md bg-blue-400/70"
+          style={{ height: `${h}px` }}
+        />
       ))}
     </div>
   );
@@ -51,10 +61,7 @@ function MiniLine() {
         strokeWidth="3"
         strokeLinecap="round"
       />
-      <path
-        d="M0,60 L0,45 L160,28 L160,60 Z"
-        fill="url(#glow)"
-      />
+      <path d="M0,60 L0,45 L160,28 L160,60 Z" fill="url(#glow)" />
     </svg>
   );
 }
@@ -63,28 +70,28 @@ function MiniLine() {
 const ARCHIVE = [
   {
     id: 1,
-    date: '14/marzo/2025',
+    date: "14/marzo/2025",
     items: [
       {
-        id: 'a1',
-        title: '🐣 Nuevo Departamento en Preventa – ¡Ubicación…',
-        tag: 'Orgánico',
+        id: "a1",
+        title: "🐣 Nuevo Departamento en Preventa – ¡Ubicación…",
+        tag: "Orgánico",
         image:
-          'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop',
+          "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop",
       },
       {
-        id: 'a2',
-        title: '🏠 Nuevo Departamento en Preventa – ¡Ubicación…',
-        tag: 'Orgánico',
+        id: "a2",
+        title: "🏠 Nuevo Departamento en Preventa – ¡Ubicación…",
+        tag: "Orgánico",
         image:
-          'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop',
+          "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop",
       },
       {
-        id: 'a3',
-        title: '✨ Nuevo Departamento en Preventa – ¡Ubicación…',
-        tag: 'Orgánico',
+        id: "a3",
+        title: "✨ Nuevo Departamento en Preventa – ¡Ubicación…",
+        tag: "Orgánico",
         image:
-          'https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=800&auto=format&fit=crop',
+          "https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=800&auto=format&fit=crop",
       },
     ],
   },
@@ -95,18 +102,49 @@ export default function ReturningUserPage() {
   const { logout } = useAuth?.() || {}; // si tu AuthContext expone logout()
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [hasInstagram, setHasInstagram] = useState(null); // null = aún cargando
+
+  useEffect(() => {
+    // Llamada a la API apenas se monta el componente
+    const fetchInstagramStatus = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/social/instagram/check`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res.status === 200) {
+          const data = await res.json();
+          setHasInstagram(data.connected);
+        } else {
+          console.error("Error inesperado:", res.status);
+          setHasInstagram(false);
+        }
+      } catch (error) {
+        console.error("Error al verificar cuenta de Instagram:", error);
+        setHasInstagram(false);
+      }
+    };
+
+    fetchInstagramStatus();
+  }, []);
+
   const handleLogout = () => {
     try {
       // preferimos logout() si existe
       if (logout) logout();
       // fallback por si acaso
-      localStorage.removeItem('token');
-      localStorage.removeItem('ig_access');
-      localStorage.removeItem('ig_refresh');
-      document.cookie = 'ig_access=; Max-Age=0; path=/';
-      document.cookie = 'ig_refresh=; Max-Age=0; path=/';
+      localStorage.removeItem("token");
+      localStorage.removeItem("ig_access");
+      localStorage.removeItem("ig_refresh");
+      document.cookie = "ig_access=; Max-Age=0; path=/";
+      document.cookie = "ig_refresh=; Max-Age=0; path=/";
     } catch {}
-    navigate('/', { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (
@@ -128,11 +166,42 @@ export default function ReturningUserPage() {
         </div>
       </header>
 
+      <section className="mt-8">
+        {/* 🔹 Solo mostramos el aviso si la API respondió que NO hay cuenta */}
+        {hasInstagram === false && (
+          <div className="mx-auto max-w-5xl px-4">
+            <div className="rounded-2xl bg-rose-500/10 border border-rose-400/30 p-4 flex items-center gap-3">
+              <span className="text-2xl">⚠️</span>
+              <div>
+                <p className="text-sm">
+                  No tienes ninguna cuenta de Instagram conectada.
+                </p>
+                <button
+                  onClick={() => navigate("/settings")}
+                  className="mt-1 text-sm text-rose-300 underline hover:text-rose-200"
+                >
+                  Conectar cuenta ahora
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 🔹 Podrías opcionalmente mostrar un loader mientras la API responde */}
+        {hasInstagram === null && (
+          <div className="mx-auto max-w-5xl px-4 text-white/70 text-sm">
+            Verificando conexión con Instagram...
+          </div>
+        )}
+      </section>
+
       {/* Contenido */}
       <main className="mx-auto max-w-5xl px-4 pb-28">
         {/* Interacciones */}
         <section className="mt-6">
-          <h2 className="text-sm uppercase tracking-wider text-white/60">Interacciones</h2>
+          <h2 className="text-sm uppercase tracking-wider text-white/60">
+            Interacciones
+          </h2>
 
           <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {/* Visitas */}
@@ -154,7 +223,9 @@ export default function ReturningUserPage() {
                 <div className="text-2xl font-semibold">345.6k</div>
                 <MiniDonut />
               </div>
-              <div className="mt-2 text-xs text-white/60">● Directos &nbsp;&nbsp; ○ Referenciados</div>
+              <div className="mt-2 text-xs text-white/60">
+                ● Directos &nbsp;&nbsp; ○ Referenciados
+              </div>
             </div>
 
             {/* Nuevas interacciones */}
@@ -174,22 +245,25 @@ export default function ReturningUserPage() {
         <section className="mt-8">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-lg font-semibold">Contenido archivado</h2>
-<button
-  onClick={() => navigate('/repository')}
-  className="text-sm text-white/60 hover:text-white/80"
->
-  Ver todo
-</button>
-
-
+            <button
+              onClick={() => navigate("/repository")}
+              className="text-sm text-white/60 hover:text-white/80"
+            >
+              Ver todo
+            </button>
           </div>
 
-          {ARCHIVE.map(group => (
-            <div key={group.id} className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-3">
-              <div className="text-center text-xs text-white/60 mb-2">{group.date}</div>
+          {ARCHIVE.map((group) => (
+            <div
+              key={group.id}
+              className="rounded-2xl bg-white/5 ring-1 ring-white/10 p-3"
+            >
+              <div className="text-center text-xs text-white/60 mb-2">
+                {group.date}
+              </div>
 
               <div className="space-y-3">
-                {group.items.map(item => (
+                {group.items.map((item) => (
                   <div
                     key={item.id}
                     className="flex items-center gap-3 rounded-xl bg-white/5 ring-1 ring-white/10 p-2 hover:bg-white/10 transition"
@@ -216,12 +290,32 @@ export default function ReturningUserPage() {
       </main>
 
       {/* FAB (único en el “menú” inferior) */}
+      {/* FAB (único en el “menú” inferior) */}
       <button
-        onClick={() => navigate('/instruct')}
-        className="fixed right-5 bottom-6 w-14 h-14 rounded-full bg-brand-primary text-white text-3xl leading-none shadow-xl
-                   flex items-center justify-center hover:opacity-95 active:opacity-90"
+        onClick={() => {
+          if (hasInstagram) {
+            navigate("/instruct");
+          } else {
+            alert(
+              "Debes conectar una cuenta de Instagram antes de crear publicaciones."
+            );
+          }
+        }}
+        disabled={hasInstagram === false || hasInstagram === null}
+        className={`fixed right-5 bottom-6 w-14 h-14 rounded-full 
+              flex items-center justify-center text-3xl leading-none shadow-xl
+              transition 
+              ${
+                hasInstagram
+                  ? "bg-brand-primary text-white hover:opacity-95 active:opacity-90"
+                  : "bg-gray-600/40 text-white/50 cursor-not-allowed"
+              }`}
         aria-label="Crear publicación"
-        title="Crear publicación"
+        title={
+          hasInstagram
+            ? "Crear publicación"
+            : "Conecta tu cuenta de Instagram para habilitar esta opción"
+        }
       >
         +
       </button>
@@ -237,7 +331,9 @@ export default function ReturningUserPage() {
             <div className="mx-auto max-w-md">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-full bg-brand-primary grid place-items-center font-bold">LS</div>
+                  <div className="w-9 h-9 rounded-full bg-brand-primary grid place-items-center font-bold">
+                    LS
+                  </div>
                   <BrandLS360 />
                 </div>
                 <button
@@ -250,9 +346,21 @@ export default function ReturningUserPage() {
               </div>
 
               <div className="space-y-2">
-                <MenuItem label="Perfil" onClick={() => alert('Próximamente')} icon="👤" />
-                <MenuItem label="Notificaciones" onClick={() => alert('Próximamente')} icon="🔔" />
-                <MenuItem label="Configuración" onClick={() => alert('Próximamente')} icon="⚙️" />
+                <MenuItem
+                  label="Perfil"
+                  onClick={() => alert("Próximamente")}
+                  icon="👤"
+                />
+                <MenuItem
+                  label="Notificaciones"
+                  onClick={() => alert("Próximamente")}
+                  icon="🔔"
+                />
+                <MenuItem
+                  label="Configuración"
+                  onClick={() => alert("Próximamente")}
+                  icon="⚙️"
+                />
 
                 <button
                   onClick={handleLogout}

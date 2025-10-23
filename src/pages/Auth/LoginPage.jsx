@@ -4,15 +4,34 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#0B1220] text-white flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-    <h1 className="mb-8 text-center">
-  <span className="text-4xl md:text-5xl font-semibold font-sans tracking-tight">
-    Lead
-  </span>
-  <span className="text-4xl md:text-5xl italic font-brandSerif font-medium text-white/90 ml-1 align-baseline">
-    Social 360
-  </span>
-</h1>
+        <h1 className="flex items-center justify-center gap-3 mb-8">
+          {/* Ícono circular */}
+          <img
+            src="/assets/logo-icon.png" // 🔹 Reemplaza por el path real
+            alt="Lead Social logo"
+            className="w-12 h-12 md:w-14 md:h-14"
+          />
 
+          {/* Texto del logo */}
+          <div className="flex flex-col leading-tight">
+            <div className="flex flex-col text-left">
+              <span className="text-white font-semibold tracking-[0.25em] text-lg md:text-xl">
+                LEAD
+              </span>
+              <span className="text-white font-light tracking-[0.25em] text-lg md:text-xl">
+                SOCIAL
+              </span>
+            </div>
+            <span className="text-[10px] md:text-xs text-white/60 tracking-[0.35em] mt-1 uppercase">
+              IA 360 PARA REDES
+            </span>
+          </div>
+        </h1>
+
+        {/* Subtítulo */}
+        <h2 className="mt-6 mb-8 text-2xl md:text-3xl font-semibold text-center">
+          Ingresar
+        </h2>
 
         <LoginForm />
       </div>
