@@ -73,7 +73,10 @@ export default function LoginForm() {
       <InstagramBusinessButton />
 
       <div className="mt-2 text-center">
-        <Link to="/register" className="text-sm font-semibold text-brand-primary hover:underline">
+        <Link
+          to="/register"
+          className="text-sm font-semibold text-brand-primary hover:underline"
+        >
           Registrarse
         </Link>
       </div>
