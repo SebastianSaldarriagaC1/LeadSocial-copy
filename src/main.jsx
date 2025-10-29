@@ -19,6 +19,7 @@ import NewUserPage from "./pages/Onboarding/NewUserPage.jsx";
 import CreateIntroPage from "./pages/Onboarding/CreateIntroPage.jsx";
 import ReturningUserPage from "./pages/Onboarding/ReturningUserPage.jsx";
 
+import CreationOptionsPage from "./pages/Creator/CreationOptionsPage.jsx";
 import InstructAIPage from "./pages/Creator/InstructAIPage.jsx";
 import GeneratingPage from "./pages/Creator/GeneratingPage.jsx";
 import ResultPage from "./pages/Creator/ResultPage.jsx";
@@ -87,6 +88,14 @@ const router = createBrowserRouter([
   // Creator
   {
     path: "/instruct",
+    element: (
+      <RequireAuth>
+        <CreationOptionsPage />
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/instruct/type",
     element: (
       <RequireAuth>
         <InstructAIPage />

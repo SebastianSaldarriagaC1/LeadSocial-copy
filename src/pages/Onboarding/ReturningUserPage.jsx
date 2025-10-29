@@ -8,16 +8,25 @@ const CONNECT_URL = `${BASE}/api/social/instagram/connect`;
 // ---------- Marca ----------
 function BrandLS360() {
   return (
-    <h1 className="flex items-baseline gap-1">
-      <span className="text-2xl md:text-3xl font-semibold tracking-tight">
-        Lead
-      </span>
-      <span className="text-2xl md:text-3xl italic font-brandSerif font-medium text-white/90">
-        Social
-      </span>
-      <span className="text-2xl md:text-3xl italic font-brandSerif font-medium text-white/90">
-        360
-      </span>
+    <h1 className="flex items-center justify-center gap-3">
+      {/* Ícono circular */}
+      <img
+        src="/assets/logo-icon.png"
+        alt="Lead Social logo"
+        className="w-12 h-12 md:w-12 md:h-12"
+      />
+
+      {/* Texto del logo */}
+      <div className="flex flex-col leading-tight">
+        <div className="flex flex-col text-left">
+          <span className="text-white font-semibold tracking-[0.25em] text-lg md:text-xl">
+            LEAD
+          </span>
+          <span className="text-white font-light tracking-[0.25em] text-lg md:text-xl">
+            SOCIAL
+          </span>
+        </div>
+      </div>
     </h1>
   );
 }

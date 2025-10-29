@@ -7,7 +7,7 @@ export default function LoginPage() {
         <h1 className="flex items-center justify-center gap-3 mb-8">
           {/* Ícono circular */}
           <img
-            src="/assets/logo-icon.png" // 🔹 Reemplaza por el path real
+            src="/assets/logo-icon.png"
             alt="Lead Social logo"
             className="w-12 h-12 md:w-14 md:h-14"
           />
