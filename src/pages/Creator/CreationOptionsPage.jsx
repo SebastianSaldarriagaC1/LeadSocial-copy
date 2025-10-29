@@ -16,14 +16,14 @@ export default function CreationOptionsPage() {
 
           <Button
             disabled
-            className="bg-[#1E293B] text-gray-400 cursor-not-allowed"
+            className="bg-inputbg hover:bg-inputbg/90 cursor-not-allowed"
           >
             Cargar Una Foto (Próximamente)
           </Button>
 
           <Button
             disabled
-            className="bg-[#1E293B] text-gray-400 cursor-not-allowed"
+            className="bg-inputbg hover:bg-inputbg/90 cursor-not-allowed"
           >
             Tomar Una Foto (Próximamente)
           </Button>
