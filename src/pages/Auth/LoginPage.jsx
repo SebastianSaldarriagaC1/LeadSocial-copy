@@ -1,4 +1,4 @@
-import LoginForm from "../../organisms/LoginForm";
+import InstagramBusinessButton from "../../organisms/InstagramBusinessButton";
 
 export default function LoginPage() {
   return (
@@ -33,7 +33,7 @@ export default function LoginPage() {
           Ingresar
         </h2>
 
-        <LoginForm />
+        <InstagramBusinessButton />
       </div>
     </div>
   );

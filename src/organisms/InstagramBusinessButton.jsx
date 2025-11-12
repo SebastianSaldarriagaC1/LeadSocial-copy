@@ -16,14 +16,14 @@ export default function InstagramBusinessButton({ className = "" }) {
       type="button"
       onClick={goToInstagramConnect}
       className={[
-        "w-full h-12 px-4 rounded-xl bg-white/10 ring-1 ring-white/15",
-        "text-white font-semibold hover:bg-white/15 transition-colors",
+        "w-full h-12 px-4 rounded-xl bg-brand-primary ring-1 ring-white/15",
+        "text-white font-semibold focus:outline-none focus:shadow-focus-blue transition-colors hover:opacity-95",
         "flex items-center justify-center gap-3",
         className,
       ].join(" ")}
     >
       {/* ícono IG inline */}
-      <span className="inline-flex w-5 h-5 items-center justify-center">
+      <span className="inline-flex w-5 h-5 items-center justify-center ">
         <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
           <rect
             x="3"
